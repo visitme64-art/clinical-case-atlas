@@ -179,9 +179,12 @@
       sp.modules.forEach(function (mid) {
         var m = DATA.getModule(mid);
         if (!m) return;
+                var isCaseModule = (m.id === "long-cases" || m.id === "short-cases");
+        var href = isCaseModule
+          ? "cases.html?s=" + encodeURIComponent(sp.id) + "&amp;m=" + encodeURIComponent(m.id)
+          : "modules.html?m=" + encodeURIComponent(m.id) + "&amp;s=" + encodeURIComponent(sp.id);
         modHtml +=
-          '<a class="module-card" href="modules.html?m=' + encodeURIComponent(m.id) +
-          '&amp;s=' + encodeURIComponent(sp.id) + '">' +
+          '<a class="module-card" href="' + href + '">' +
             '<span class="m-icon" aria-hidden="true">' + m.icon + '</span>' +
             '<h3>' + UI.escapeHtml(m.name) + '</h3>' +
             '<p>' + UI.escapeHtml(m.desc) + '</p>' +
