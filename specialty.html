@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b2545">
+  <title>Specialty | Clinical Case Atlas Bangladesh</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="Clinical Case Atlas Bangladesh home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+        </span>
+        <span class="brand-text">
+          <strong>Clinical Case Atlas</strong>
+          <small>Bangladesh</small>
+        </span>
+      </a>
+
+      <button id="menuBtn" class="menu-btn" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav id="navLinks" class="nav-links" aria-label="Main navigation">
+        <a href="index.html">Home</a>
+        <a href="specialties.html" class="active">Specialties</a>
+        <a href="modules.html">Modules</a>
+        <a href="bookmarks.html">Bookmarks</a>
+        <a href="about.html">About</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- SPECIALTY HERO -->
+    <section class="hero" id="spHero">
+      <div class="container hero-inner">
+        <p style="margin:0 0 14px;font-size:0.9rem;">
+          <a href="specialties.html" style="color:#99f6e4;">&larr; All specialties</a>
+        </p>
+
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px;">
+          <span id="spIcon" class="m-icon" aria-hidden="true"
+                style="width:64px;height:64px;font-size:2rem;background:rgba(255,255,255,0.14);flex:0 0 auto;">🩺</span>
+          <div style="min-width:0;">
+            <span id="spCat" class="eyebrow" style="margin-bottom:6px;">Specialty</span>
+            <h1 id="spName" style="margin:0;">Loading...</h1>
+          </div>
+        </div>
+
+        <p id="spDesc" class="hero-sub" style="margin-top:6px;"></p>
+
+        <button type="button" id="spBookmark" class="btn btn-outline" aria-pressed="false">☆ Bookmark</button>
+      </div>
+    </section>
+
+    <!-- MODULES FOR THIS SPECIALTY -->
+    <section class="section" id="spModulesSection">
+      <div class="container">
+        <div class="section-head">
+          <h2>Learning Modules</h2>
+          <p>Modules planned for this specialty. Content is being added step by step.</p>
+        </div>
+        <div id="spModules" class="module-grid"></div>
+      </div>
+    </section>
+
+    <!-- QUALIFICATION NOTE -->
+    <section class="section section-alt" id="spQualSection">
+      <div class="container">
+        <div class="panel">
+          <div class="panel-head"><h2>Qualifications &amp; Examinations</h2></div>
+          <p>
+            Qualification details for this specialty have not been added yet.
+            Availability of FCPS, MD, MS, MCPS, Diploma, MPhil and other degrees differs between
+            specialties and institutions, so each entry will be added only after it is verified from
+            official Bangladesh sources.
+          </p>
+          <p style="margin:0;color:var(--muted);font-size:0.9rem;">
+            Until then, please confirm eligibility, syllabus and examination format with the
+            relevant awarding body (for example BCPS, BSMMU or the university offering the course).
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- RELATED SPECIALTIES -->
+    <section class="section" id="spRelatedSection">
+      <div class="container">
+        <div class="section-head">
+          <h2>Related Specialties</h2>
+          <p>Other disciplines in the same category.</p>
+        </div>
+        <div id="spRelated" class="module-grid"></div>
+      </div>
+    </section>
+
+    <!-- NOT FOUND -->
+    <section class="section" id="spNotFound" hidden>
+      <div class="container center">
+        <h2>Specialty not found</h2>
+        <p>This link does not match any specialty in the directory.</p>
+        <a class="btn btn-primary" href="specialties.html">Browse all specialties</a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>
+        <strong>Clinical Case Atlas Bangladesh</strong>
+        <p>Learn Every Case. Master Every Examination.</p>
+      </div>
+      <div class="footer-links">
+        <a href="specialties.html">Specialties</a>
+        <a href="modules.html">Modules</a>
+        <a href="bookmarks.html">Bookmarks</a>
+        <a href="about.html">About</a>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <small>&copy; <span id="year"></span> Clinical Case Atlas Bangladesh. Free for educational use. No account needed.</small>
+    </div>
+  </footer>
+
+  <!-- Scripts (order matters) -->
+  <script src="js/data.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/app.js"></script>
+
+  <!-- Page script: fills this page for the chosen specialty -->
+  <script>
+    (function () {
+      "use strict";
+
+      var DATA = window.ATLAS_DATA;
+      var STORE = window.ATLAS_STORE;
+      var UI = window.ATLAS_UI;
+      if (!DATA || !STORE || !UI) return;
+
+      function $(id) { return document.getElementById(id); }
+
+      var params = new URLSearchParams(window.location.search);
+      var id = params.get("id");
+      var sp = id ? DATA.getSpecialty(id) : null;
+
+      if (!sp) {
+        $("spHero").hidden = true;
+        $("spModulesSection").hidden = true;
+        $("spQualSection").hidden = true;
+        $("spRelatedSection").hidden = true;
+        $("spNotFound").hidden = false;
+        document.title = "Specialty not found | Clinical Case Atlas Bangladesh";
+        return;
+      }
+
+      /* Hero */
+      var cat = DATA.getCategory(sp.category);
+      document.title = sp.name + " | Clinical Case Atlas Bangladesh";
+      $("spIcon").textContent = sp.icon;
+      $("spName").textContent = sp.name;
+      $("spDesc").textContent = sp.desc;
+      $("spCat").textContent = cat ? cat.name : "Specialty";
+
+      /* Modules planned for this specialty */
+      var modHtml = "";
+      sp.modules.forEach(function (mid) {
+        var m = DATA.getModule(mid);
+        if (!m) return;
+        modHtml +=
+          '<a class="module-card" href="modules.html?m=' + encodeURIComponent(m.id) +
+          '&amp;s=' + encodeURIComponent(sp.id) + '">' +
+            '<span class="m-icon" aria-hidden="true">' + m.icon + '</span>' +
+            '<h3>' + UI.escapeHtml(m.name) + '</h3>' +
+            '<p>' + UI.escapeHtml(m.desc) + '</p>' +
+            '<span class="badge">Content coming soon</span>' +
+          '</a>';
+      });
+      $("spModules").innerHTML = modHtml || "<p>No modules listed yet.</p>";
+
+      /* Related specialties (same category, up to 6) */
+      var related = DATA.specialties.filter(function (x) {
+        return x.category === sp.category && x.id !== sp.id;
+      }).slice(0, 6);
+
+      if (related.length) {
+        $("spRelated").innerHTML = related.map(function (x) {
+          return '<a class="module-card" href="' + UI.specialtyUrl(x.id) + '" data-track="specialty" data-id="' +
+                 UI.escapeHtml(x.id) + '">' +
+                   '<span class="m-icon" aria-hidden="true">' + x.icon + '</span>' +
+                   '<h3>' + UI.escapeHtml(x.name) + '</h3>' +
+                   '<p>' + UI.escapeHtml(x.desc) + '</p>' +
+                 '</a>';
+        }).join("");
+      } else {
+        $("spRelatedSection").hidden = true;
+      }
+
+      /* Bookmark button */
+      var btn = $("spBookmark");
+      function syncBookmark() {
+        var saved = STORE.isBookmarked("specialty", sp.id);
+        btn.textContent = saved ? "★ Bookmarked" : "☆ Bookmark";
+        btn.setAttribute("aria-pressed", saved ? "true" : "false");
+      }
+      btn.addEventListener("click", function () {
+        STORE.toggleBookmark("specialty", sp.id);
+      });
+      document.addEventListener("atlas:storage", syncBookmark);
+      syncBookmark();
+
+      /* Record as recently viewed */
+      STORE.addRecent("specialty", sp.id);
+    })();
+  </script>
+</body>
+</html>

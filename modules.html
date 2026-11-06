@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b2545">
+  <title>Learning Modules | Clinical Case Atlas Bangladesh</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="Clinical Case Atlas Bangladesh home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+        </span>
+        <span class="brand-text">
+          <strong>Clinical Case Atlas</strong>
+          <small>Bangladesh</small>
+        </span>
+      </a>
+
+      <button id="menuBtn" class="menu-btn" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav id="navLinks" class="nav-links" aria-label="Main navigation">
+        <a href="index.html">Home</a>
+        <a href="specialties.html">Specialties</a>
+        <a href="modules.html" class="active">Modules</a>
+        <a href="bookmarks.html">Bookmarks</a>
+        <a href="about.html">About</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- HERO (text is filled by the page script) -->
+    <section class="hero">
+      <div class="container hero-inner">
+        <p style="margin:0 0 14px;font-size:0.9rem;">
+          <a id="mdBack" href="modules.html" style="color:#99f6e4;">&larr; All modules</a>
+        </p>
+
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px;">
+          <span id="mdIcon" class="m-icon" aria-hidden="true"
+                style="width:64px;height:64px;font-size:2rem;background:rgba(255,255,255,0.14);flex:0 0 auto;">📚</span>
+          <div style="min-width:0;">
+            <span id="mdEyebrow" class="eyebrow" style="margin-bottom:6px;">Learning Module</span>
+            <h1 id="mdName" style="margin:0;">Learning Modules</h1>
+          </div>
+        </div>
+
+        <p id="mdDesc" class="hero-sub" style="margin-top:6px;"></p>
+
+        <button type="button" id="mdBookmark" class="btn btn-outline" aria-pressed="false" hidden>☆ Bookmark</button>
+      </div>
+    </section>
+
+    <!-- OVERVIEW: all modules (shown when no module is chosen) -->
+    <section class="section" id="mdOverview" hidden>
+      <div class="container">
+        <div class="section-head">
+          <h2>Choose a Module</h2>
+          <p>Not every module applies to every specialty. Open a module to see which specialties use it.</p>
+        </div>
+        <div id="mdAll" class="module-grid"></div>
+      </div>
+    </section>
+
+    <!-- DETAIL: one module -->
+    <section class="section" id="mdDetail" hidden>
+      <div class="container two-col">
+
+        <div class="panel">
+          <div class="panel-head"><h2>What this module will cover</h2></div>
+          <ul id="mdCovers" class="item-list"></ul>
+          <p style="margin:14px 0 0;">
+            <span class="badge">Content coming soon</span>
+          </p>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Specialties using this module</h2>
+            <span id="mdCount" class="badge"></span>
+          </div>
+          <ul id="mdSpecialties" class="item-list"></ul>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- NOTICE -->
+    <section class="section section-notice">
+      <div class="container">
+        <div class="notice">
+          <strong>Important:</strong>
+          Examination formats differ between specialties and awarding bodies. Always confirm the
+          current syllabus and format with the official institution. This site is for educational
+          revision only and is not a substitute for clinical judgement or official guidance.
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>
+        <strong>Clinical Case Atlas Bangladesh</strong>
+        <p>Learn Every Case. Master Every Examination.</p>
+      </div>
+      <div class="footer-links">
+        <a href="specialties.html">Specialties</a>
+        <a href="modules.html">Modules</a>
+        <a href="bookmarks.html">Bookmarks</a>
+        <a href="about.html">About</a>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <small>&copy; <span id="year"></span> Clinical Case Atlas Bangladesh. Free for educational use. No account needed.</small>
+    </div>
+  </footer>
+
+  <!-- Scripts (order matters) -->
+  <script src="js/data.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/app.js"></script>
+
+  <!-- Page script -->
+  <script>
+    (function () {
+      "use strict";
+
+      var DATA = window.ATLAS_DATA;
+      var STORE = window.ATLAS_STORE;
+      var UI = window.ATLAS_UI;
+      if (!DATA || !STORE || !UI) return;
+
+      function $(id) { return document.getElementById(id); }
+
+      /* Planned coverage for each module (a guide, not final syllabus) */
+      var COVERS = {
+        "long-cases": [
+          "Structured case presentation from history to management",
+          "Key positive and negative findings",
+          "Differential diagnosis and reasoning",
+          "Investigation plan and interpretation",
+          "Common examiner discussion points"
+        ],
+        "short-cases": [
+          "Focused examination of common exam cases",
+          "Spot diagnosis and key signs",
+          "How to present findings in a short time",
+          "Common follow-up questions"
+        ],
+        "clinical-examination": [
+          "Step-by-step examination technique",
+          "Eliciting and interpreting clinical signs",
+          "Common mistakes to avoid"
+        ],
+        "history-taking": [
+          "Structured history frameworks",
+          "Specialty-specific questions and red flags",
+          "Communication and presentation of the history"
+        ],
+        "systemic-examination": [
+          "System-by-system examination approach",
+          "Normal versus abnormal findings",
+          "Linking findings to likely diagnoses"
+        ],
+        "viva": [
+          "Frequently asked questions by topic",
+          "Model answers in a clear exam structure",
+          "Quick revision points"
+        ],
+        "practical": [
+          "OSCE, OSPE and practical station preparation",
+          "Marking-style checklists",
+          "Common errors and examiner expectations"
+        ],
+        "spotters": [
+          "Rapid identification of images, specimens and signs",
+          "Key identifying features",
+          "Likely questions on each spotter"
+        ],
+        "radiology": [
+          "Systematic approach to X-ray, CT, MRI and ultrasound",
+          "Classic imaging findings",
+          "How to describe and report an image"
+        ],
+        "ecg-investigations": [
+          "ECG interpretation approach",
+          "Common laboratory and investigation reports",
+          "Linking results to diagnosis and management"
+        ],
+        "instruments-specimens": [
+          "Identification and description of instruments and specimens",
+          "Uses, principles and complications",
+          "Typical viva questions"
+        ],
+        "laboratory": [
+          "Laboratory methods and principles",
+          "Interpretation of results",
+          "Quality control and common pitfalls"
+        ]
+      };
+
+      var params = new URLSearchParams(window.location.search);
+      var mid = params.get("m");
+      var sid = params.get("s");
+      var mod = mid ? DATA.getModule(mid) : null;
+      var fromSp = sid ? DATA.getSpecialty(sid) : null;
+
+      /* ----- Back link ----- */
+      var back = $("mdBack");
+      if (mod && fromSp) {
+        back.href = UI.specialtyUrl(fromSp.id);
+        back.innerHTML = "&larr; Back to " + UI.escapeHtml(fromSp.name);
+      } else if (mod) {
+        back.href = "modules.html";
+        back.innerHTML = "&larr; All modules";
+      } else {
+        back.hidden = true;
+      }
+
+      /* ----- Overview (no valid module chosen) ----- */
+      if (!mod) {
+        $("mdOverview").hidden = false;
+        $("mdName").textContent = "Learning Modules";
+        $("mdEyebrow").textContent = "Study Tools";
+        $("mdDesc").textContent = "Cases, viva, spotters, practicals and more. Pick a module to see what it covers and which specialties use it.";
+        document.title = "Learning Modules | Clinical Case Atlas Bangladesh";
+
+        $("mdAll").innerHTML = DATA.modules.map(function (m) {
+          return '<a class="module-card" href="modules.html?m=' + encodeURIComponent(m.id) + '">' +
+                   '<span class="m-icon" aria-hidden="true">' + m.icon + '</span>' +
+                   '<h3>' + UI.escapeHtml(m.name) + '</h3>' +
+                   '<p>' + UI.escapeHtml(m.desc) + '</p>' +
+                 '</a>';
+        }).join("");
+        return;
+      }
+
+      /* ----- Detail (one module) ----- */
+      $("mdDetail").hidden = false;
+      document.title = mod.name + " | Clinical Case Atlas Bangladesh";
+      $("mdIcon").textContent = mod.icon;
+      $("mdName").textContent = mod.name;
+      $("mdEyebrow").textContent = fromSp ? fromSp.name : "Learning Module";
+      $("mdDesc").textContent = mod.desc;
+
+      var covers = COVERS[mod.id] || [];
+      $("mdCovers").innerHTML = covers.length
+        ? covers.map(function (c) { return '<li><a href="#" onclick="return false;" style="cursor:default;">✔ ' + UI.escapeHtml(c) + '</a></li>'; }).join("")
+        : '<li class="empty">Details coming soon.</li>';
+
+      var users = DATA.specialties.filter(function (sp) {
+        return sp.modules.indexOf(mod.id) !== -1;
+      });
+      $("mdCount").textContent = users.length + (users.length === 1 ? " specialty" : " specialties");
+      $("mdSpecialties").innerHTML = users.length
+        ? users.map(function (sp) {
+            return '<li><a href="' + UI.specialtyUrl(sp.id) + '" data-track="specialty" data-id="' + UI.escapeHtml(sp.id) + '">' +
+                     '<span aria-hidden="true">' + sp.icon + '</span>' +
+                     '<span>' + UI.escapeHtml(sp.name) + '</span>' +
+                   '</a></li>';
+          }).join("")
+        : '<li class="empty">No specialties listed yet.</li>';
+
+      /* ----- Bookmark button ----- */
+      var btn = $("mdBookmark");
+      btn.hidden = false;
+      function syncBookmark() {
+        var saved = STORE.isBookmarked("module", mod.id);
+        btn.textContent = saved ? "★ Bookmarked" : "☆ Bookmark";
+        btn.setAttribute("aria-pressed", saved ? "true" : "false");
+      }
+      btn.addEventListener("click", function () {
+        STORE.toggleBookmark("module", mod.id);
+      });
+      document.addEventListener("atlas:storage", syncBookmark);
+      syncBookmark();
+
+      /* ----- Recently viewed ----- */
+      STORE.addRecent("module", mod.id);
+    })();
+  </script>
+</body>
+</html>
